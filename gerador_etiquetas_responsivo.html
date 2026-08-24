@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de Etiquetas | LSA-VDA</title>
+<style>
+:root{--azul:#0f3d91;--azul-hover:#1a56c5;--fundo:#0f172a;--card:#111827;--campo:#0b1220;--texto:#fff;--sec:#94a3b8;--borda:#1e293b;--verde:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{min-height:100vh;background:radial-gradient(circle at top left,#1e3a8a,#0f172a 48%);color:var(--texto);font-family:"Segoe UI",Arial,sans-serif;overflow-x:hidden}
+button,input{font-family:inherit}
+.tela{display:none;width:100%;min-height:100vh;padding:clamp(10px,3vw,24px)}
+.tela.ativa{display:flex;justify-content:center;align-items:center;animation:entrada .35s ease}
+@keyframes entrada{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.painel-inicial{width:min(1060px,100%);padding:clamp(20px,4vw,42px);background:rgba(17,24,39,.97);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 30px 65px rgba(0,0,0,.38)}
+.cabecalho-inicial{display:flex;flex-direction:column;align-items:center;margin-bottom:38px;text-align:center}
+.logo-container{width:min(100%,500px);min-height:90px;display:flex;justify-content:center;align-items:center;margin:0 auto 26px;padding:14px 24px;background:#fff;border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,.24);overflow:hidden}
+.logo-mbrf{display:block;width:100%;max-width:440px;height:auto;max-height:100px;object-fit:contain;object-position:center}
+.titulo-sistema{font-size:clamp(22px,4vw,31px);font-weight:750;letter-spacing:.8px;line-height:1.2}
+.descricao-sistema{max-width:650px;margin-top:10px;color:var(--sec);font-size:15px;line-height:1.5}
+.identificacao-laboratorio,.medida,.identificacao-setor{display:inline-flex;justify-content:center;align-items:center;margin-top:16px;padding:8px 14px;border:1px solid rgba(96,165,250,.24);border-radius:999px;background:rgba(37,99,235,.12);color:#93c5fd;font-size:12px;font-weight:700;letter-spacing:.4px}
+.secao-setores{margin-top:12px}.titulo-secao{margin-bottom:18px;font-size:17px}.grade-setores{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cartao-setor{min-height:220px;display:flex;flex-direction:column;padding:24px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(145deg,rgba(30,41,59,.97),rgba(15,23,42,.97));overflow:hidden}
+.cartao-setor.disponivel{cursor:pointer;transition:.25s}.cartao-setor.disponivel:hover{transform:translateY(-4px);border-color:rgba(59,130,246,.65);box-shadow:0 18px 35px rgba(0,0,0,.28)}
+.cartao-setor.disponivel:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(59,130,246,.22)}.cartao-setor.indisponivel{opacity:.55;user-select:none}
+.icone-setor{width:52px;height:52px;display:flex;justify-content:center;align-items:center;margin-bottom:20px;border-radius:15px;background:rgba(37,99,235,.16);color:#60a5fa;font-size:25px;font-weight:800}.indisponivel .icone-setor{background:rgba(100,116,139,.14);color:#94a3b8}
+.nome-setor{font-size:19px;font-weight:750}.descricao-setor{margin-top:9px;color:var(--sec);font-size:13px;line-height:1.5}.status-setor{display:inline-flex;align-items:center;width:fit-content;margin-top:auto;padding-top:20px;color:#86efac;font-size:12px;font-weight:750;text-transform:uppercase}.status-setor:before{content:"";width:7px;height:7px;margin-right:8px;border-radius:50%;background:var(--verde);box-shadow:0 0 10px rgba(34,197,94,.75)}.indisponivel .status-setor{color:#94a3b8}.indisponivel .status-setor:before{background:#64748b;box-shadow:none}
+.card-gerador{width:min(900px,100%);padding:clamp(20px,4vw,40px);background:rgba(17,24,39,.97);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 30px 65px rgba(0,0,0,.38)}
+.barra-superior{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px}.botao-voltar{min-height:42px;padding:0 16px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(15,23,42,.72);color:#cbd5e1;font-size:13px;font-weight:700;cursor:pointer}.identificacao-setor{margin-top:0;font-size:11px;text-transform:uppercase}
+.cabecalho-gerador{margin-bottom:34px;text-align:center}.cabecalho-gerador h1{font-size:clamp(24px,4vw,31px);letter-spacing:1px}.subtitulo{margin-top:9px;color:var(--sec);font-size:14px}.medida{margin-top:14px}
+.formulario{display:grid;grid-template-columns:minmax(0,1fr) 180px 150px;gap:14px}input{width:100%;height:58px;padding:0 18px;border:1px solid var(--borda);border-radius:14px;background:var(--campo);color:#fff;font-size:17px}input::placeholder{color:#64748b}input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.18)}.botao-gerar{min-height:58px;padding:0 18px;border:0;border-radius:14px;background:var(--azul);color:#fff;font-size:16px;font-weight:750;cursor:pointer;transition:.25s}.botao-gerar:hover{background:var(--azul-hover);transform:translateY(-2px)}#info{min-height:22px;margin-top:18px;color:#60a5fa;text-align:center;font-size:14px;font-weight:650}
+#area-impressao{display:none}.etiqueta{position:relative;width:50mm;height:16mm;margin:0;padding:0;background:#fff;color:#000;overflow:hidden}.texto-principal{position:absolute;top:3.1mm;left:2.5mm;right:2.5mm;height:5.5mm;display:flex;justify-content:center;align-items:center;color:#000;font:700 15px/1 Arial,Helvetica,sans-serif;letter-spacing:.15px;text-align:center;text-transform:uppercase;white-space:nowrap;overflow:hidden}.rodape{position:absolute;left:2.5mm;right:2.5mm;bottom:2.4mm;height:2.4mm;display:flex;justify-content:center;align-items:center;color:#000;font:700 8px/1 Arial,Helvetica,sans-serif;letter-spacing:.8px;text-align:center;text-transform:uppercase;white-space:nowrap}
+@media(max-width:850px){.grade-setores{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.tela.ativa{align-items:flex-start}.painel-inicial,.card-gerador{border-radius:20px}.logo-container{width:100%;min-height:75px;padding:10px 16px}.logo-mbrf{max-width:360px;max-height:80px}.formulario{grid-template-columns:1fr}.botao-gerar{width:100%}}
+@media(max-width:540px){.grade-setores{grid-template-columns:1fr}.cartao-setor{min-height:190px}.barra-superior{flex-direction:column-reverse;align-items:stretch}.botao-voltar{width:100%}.identificacao-setor{align-self:center}.identificacao-laboratorio{font-size:10px;line-height:1.4}}
+@media(max-width:400px){.logo-container{min-height:65px;padding:8px 12px;border-radius:14px}.logo-mbrf{max-width:100%;max-height:65px}}
+@media print{@page{size:50mm 16mm;margin:0}html,body{width:50mm!important;min-width:50mm!important;margin:0!important;padding:0!important;background:#fff!important;overflow:visible!important}.tela{display:none!important}#area-impressao{display:block!important;width:50mm!important;margin:0!important;padding:0!important;background:#fff!important}.etiqueta{display:block!important;width:50mm!important;height:16mm!important;margin:0!important;padding:0!important;break-inside:avoid!important;page-break-inside:avoid!important;break-after:page!important;page-break-after:always!important}.etiqueta:last-child{break-after:auto!important;page-break-after:auto!important}}
+</style>
+</head>
+<body>
+<main id="tela-inicial" class="tela ativa">
+<section class="painel-inicial">
+<header class="cabecalho-inicial">
+<div class="logo-container">
+<img src="logo.png" class="logo-mbrf" alt="Logo MBRF">
+</div>
+<h1 class="titulo-sistema">SISTEMA DE ETIQUETAS</h1>
+<p class="descricao-sistema">Selecione o setor para acessar o respectivo gerador de etiquetas.</p>
+<div class="identificacao-laboratorio">LABORATÓRIO DE SAÚDE ANIMAL • LSA-VDA</div>
+</header>
+<section class="secao-setores">
+<h2 class="titulo-secao">Setores disponíveis</h2>
+<div class="grade-setores">
+<article id="cartao-salmonella" class="cartao-setor disponivel" role="button" tabindex="0" aria-label="Abrir gerador de etiquetas do setor de Salmonella"><div class="icone-setor">S</div><h3 class="nome-setor">Salmonella</h3><p class="descricao-setor">Geração de etiquetas para identificação das cadeias e amostras do setor.</p><div class="status-setor">Disponível</div></article>
+<article class="cartao-setor indisponivel" aria-disabled="true"><div class="icone-setor">+</div><h3 class="nome-setor">Novo setor</h3><p class="descricao-setor">Espaço reservado para implantação de um novo gerador de etiquetas.</p><div class="status-setor">Em breve</div></article>
+<article class="cartao-setor indisponivel" aria-disabled="true"><div class="icone-setor">+</div><h3 class="nome-setor">Novo setor</h3><p class="descricao-setor">Espaço reservado para implantação de um novo gerador de etiquetas.</p><div class="status-setor">Em breve</div></article>
+</div></section></section></main>
+<main id="tela-salmonella" class="tela"><section class="card-gerador"><div class="barra-superior"><button type="button" id="voltar-inicio" class="botao-voltar">VOLTAR AO INÍCIO</button><div class="identificacao-setor">Setor de Salmonella</div></div><header class="cabecalho-gerador"><h1>GERADOR DE ETIQUETAS</h1><div class="subtitulo">Laboratório de Saúde Animal</div><div class="medida">ZEBRA • 50 × 16 MM • GAP</div></header><section class="formulario"><input type="text" id="cadeia" placeholder="Informe a cadeia" autocomplete="off" spellcheck="false"><input type="number" id="quantidade" placeholder="Amostras" min="1" step="1" inputmode="numeric"><button type="button" id="gerar" class="botao-gerar">GERAR</button></section><div id="info" aria-live="polite"></div></section></main>
+<section id="area-impressao"></section>
+<script>
+"use strict";
+const telaInicial=document.getElementById("tela-inicial"),telaSalmonella=document.getElementById("tela-salmonella"),cartaoSalmonella=document.getElementById("cartao-salmonella"),botaoVoltar=document.getElementById("voltar-inicio"),campoCadeia=document.getElementById("cadeia"),campoQuantidade=document.getElementById("quantidade"),botaoGerar=document.getElementById("gerar"),areaInfo=document.getElementById("info"),areaImpressao=document.getElementById("area-impressao");
+function abrirTelaSalmonella(){telaInicial.classList.remove("ativa");telaSalmonella.classList.add("ativa");setTimeout(()=>campoCadeia.focus(),100)}
+function voltarParaInicio(){telaSalmonella.classList.remove("ativa");telaInicial.classList.add("ativa");limparGerador();setTimeout(()=>cartaoSalmonella.focus(),100)}
+cartaoSalmonella.addEventListener("click",abrirTelaSalmonella);cartaoSalmonella.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();abrirTelaSalmonella()}});botaoVoltar.addEventListener("click",voltarParaInicio);botaoGerar.addEventListener("click",gerarEImprimir);
+campoCadeia.addEventListener("input",()=>{const i=campoCadeia.selectionStart,f=campoCadeia.selectionEnd;campoCadeia.value=campoCadeia.value.toUpperCase();if(i!==null&&f!==null)campoCadeia.setSelectionRange(i,f);atualizarContagem()});campoQuantidade.addEventListener("input",atualizarContagem);
+function calcularEtiquetas(cadeia,quantidade){return cadeia.includes("AVOS")?quantidade:Math.ceil(quantidade/3)}
+function atualizarContagem(){const cadeia=campoCadeia.value.trim().toUpperCase(),quantidade=Number.parseInt(campoQuantidade.value,10);if(cadeia===""||!Number.isInteger(quantidade)||quantidade<=0){areaInfo.textContent="";return}const total=calcularEtiquetas(cadeia,quantidade);areaInfo.textContent=total+(total===1?" etiqueta será impressa":" etiquetas serão impressas")}
+function criarEtiqueta(cadeia){const etiqueta=document.createElement("div");etiqueta.className="etiqueta";const texto=document.createElement("div");texto.className="texto-principal";texto.textContent=cadeia;const rodape=document.createElement("div");rodape.className="rodape";rodape.textContent="LSA-VDA";etiqueta.append(texto,rodape);return etiqueta}
+function montarEtiquetas(cadeia,total){areaImpressao.replaceChildren();const f=document.createDocumentFragment();for(let n=0;n<total;n++)f.appendChild(criarEtiqueta(cadeia));areaImpressao.appendChild(f)}
+function gerarEImprimir(){if(!telaSalmonella.classList.contains("ativa"))return;const cadeia=campoCadeia.value.trim().toUpperCase(),quantidade=Number.parseInt(campoQuantidade.value,10);if(cadeia===""){alert("Informe a cadeia.");campoCadeia.focus();return}if(!Number.isInteger(quantidade)||quantidade<=0){alert("Quantidade inválida.");campoQuantidade.focus();campoQuantidade.select();return}const total=calcularEtiquetas(cadeia,quantidade);montarEtiquetas(cadeia,total);areaInfo.textContent=total+(total===1?" etiqueta gerada":" etiquetas geradas");requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>window.print(),250)))}
+function limparGerador(){campoCadeia.value="";campoQuantidade.value="";areaInfo.textContent="";areaImpressao.replaceChildren()}
+window.addEventListener("afterprint",()=>{limparGerador();if(telaSalmonella.classList.contains("ativa"))campoCadeia.focus()});document.addEventListener("keydown",e=>{if(!telaSalmonella.classList.contains("ativa"))return;if(e.key==="Enter"&&!e.repeat){e.preventDefault();gerarEImprimir()}if(e.key==="Escape"){limparGerador();campoCadeia.focus()}});
+</script>
+</body>
+</html>
